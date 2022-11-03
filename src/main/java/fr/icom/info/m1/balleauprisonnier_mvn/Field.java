@@ -4,21 +4,18 @@ package fr.icom.info.m1.balleauprisonnier_mvn;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 /**
  * Classe gerant le terrain de jeu.
  * 
  */
-public class Field extends Canvas {
-	
+public class Field extends Canvas{
 	/** Joueurs */
-	Player [] joueurs = new Player[2];
+	Player[] joueurs = new Player[2];
 	/** Couleurs possibles */
 	String[] colorMap = new String[] {"blue", "green", "orange", "purple", "yellow"};
 	/** Tableau traçant les evenements */
@@ -47,44 +44,9 @@ public class Field extends Canvas {
         gc = this.getGraphicsContext2D();
         
         /** On initialise le terrain de jeu */
-    	joueurs[0] = new Player(gc, colorMap[0], w/2, h-50, "bottom", scene);
-    	//joueurs[0].display();
+    	joueurs[0] = new Player(gc, colorMap[0], w/2, h-50, "bottom", scene, true);
+    	joueurs[1] = new Player(gc, colorMap[1], w/2, 20, "top", scene, false);
 
-    	joueurs[1] = new Player(gc, colorMap[1], w/2, 20, "top", scene);
-    	//joueurs[1].display();
-
-
-	    /** 
-	     * Event Listener du clavier 
-	     * quand une touche est pressee on la rajoute a la liste d'input
-	     *   
-	     */
-	    this.setOnKeyPressed(
-	    		new EventHandler<KeyEvent>()
-	    	    {
-	    	        public void handle(KeyEvent e)
-	    	        {
-	    	            String code = e.getCode().toString();
-	    	            // only add once... prevent duplicates
-	    	            if ( !input.contains(code) )
-	    	                input.add( code );
-	    	        }
-	    	    });
-
-	    /** 
-	     * Event Listener du clavier 
-	     * quand une touche est relachee on l'enleve de la liste d'input
-	     *   
-	     */
-	    this.setOnKeyReleased(
-			new EventHandler<KeyEvent>(){
-				public void handle(KeyEvent e){
-					String code = e.getCode().toString();
-					input.remove( code );
-				}
-			}
-		);
-	    
 	    /** 
 	     * 
 	     * Boucle principale du jeu
@@ -98,13 +60,8 @@ public class Field extends Canvas {
 	            // On nettoie le canvas a chaque frame
 	            gc.setFill( Color.LIGHTGRAY);
 	            gc.fillRect(0, 0, width, height);
-	        	
-	            // Deplacement et affichage des joueurs
-				for(int i = 0; i < joueurs.length; i++){
-					joueurs[i].controlleur();
-				}
 	    	}
-	     }.start(); // On lance la boucle de rafraichissement 
+	    }.start(); // On lance la boucle de rafraichissement 
 	     
 	}
 

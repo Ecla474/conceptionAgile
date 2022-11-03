@@ -21,8 +21,7 @@ public class App extends Application
 	 * 
 	 */
 	@Override
-	public void start(Stage stage) throws Exception 
-	{
+	public void start(Stage stage) throws Exception{
 		// Nom de la fenetre
         stage.setTitle("BalleAuPrisonnier");
 
@@ -31,18 +30,18 @@ public class App extends Application
 
         // On cree le terrain de jeu et on l'ajoute a la racine de la scene
         Field gameField = new Field(scene, 600, 600 );
-        root.getChildren().add( gameField );
-		root.getChildren().add(gameField.getJoueurs()[0].sprite);
-		root.getChildren().add(gameField.getJoueurs()[1].sprite);
+        root.getChildren().add(gameField);
+		// AFFICHAGE DES JOUEURS
+		for(int i=0; i<gameField.getJoueurs().length; i++){
+			root.getChildren().add(gameField.getJoueurs()[i].sprite);
+		}
 
         // On ajoute la scene a la fenetre et on affiche
         stage.setScene( scene );
         stage.show();
 	}
 	
-    public static void main(String[] args) 
-    {
-        //System.out.println( "Hello World!" );
+    public static void main(String[] args){
     	Application.launch(args);
     }
 }

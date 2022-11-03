@@ -8,6 +8,9 @@
 *.iml
 *.iws
 
+# Ignore les fichiers de configuration de VSCode
+.vscode
+
 # Ignore le dossier Mac .DS_Store
 .DS_Store
 
