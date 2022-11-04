@@ -7,45 +7,49 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import javafx.scene.input.KeyEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.animation.AnimationTimer;
 
 /**
- * 
- * Classe gerant un joueur
- *
+ * Classe gérant un joueur
  */
 public class Player{
-	  double x;       // position horizontale du joueur
-	  final double y; 	  // position verticale du joueur
-	  double angle = 90; // rotation du joueur, devrait toujour être en 0 et 180
-	  double step;    // pas d'un joueur
-	  String playerColor;
-	  boolean haut; // !!!!!
+	// Largeur du terrain :
+	private final int largeurTerrain;
+	// Position horizontale du joueur :
+	private double x;
+	// Position verticale du joueur :
+	private final double y;
+	// Rotation du joueur (devrait toujours être en 0 et 180) :
+	private double angle = 90;
+	// Pas d'un joueur :
+	private double step;
+	// Couleur du joueur :
+	private String playerColor;
+	// Équipes :
+	public enum equipes {UNE, DEUX};
+	private equipes equipe;
 	  
-	  // On une image globale du joueur 
-	  Image directionArrow;
-	  Sprite sprite;
-	  ImageView PlayerDirectionArrow;
+	// On une image globale du joueur 
+	Image directionArrow;
+	Sprite sprite;
+	ImageView PlayerDirectionArrow;
 	  
-	  GraphicsContext graphicsContext;
-	  ArrayList<String> input = new ArrayList<String>();
-	  /**
-	   * Constructeur du Joueur
-	   * 
-	   * @param gc ContextGraphic dans lequel on va afficher le joueur
-	   * @param color couleur du joueur
-	   * @param yInit position verticale
-	   */
-	  Player(GraphicsContext gc, String color, int xInit, int yInit, String side, Scene scene, boolean equipe){
+	GraphicsContext graphicsContext;
+
+	/**
+	 * Constructeur du Joueur
+	 * 
+	 * @param gc ContextGraphic dans lequel on va afficher le joueur
+	 * @param color couleur du joueur
+	 * @param yInit position verticale
+	 */
+	Player(GraphicsContext gc, String color, int xInit, int yInit, String side, equipes equipeDAppartenance, int largeurPlateau){
+		largeurTerrain = largeurPlateau;
 		// Tous les joueurs commencent au centre du canvas, 
-	    x = xInit;               
-	    y = yInit;
-	    graphicsContext = gc;
-	    playerColor=color;
-		haut = equipe;
+		x = xInit;
+		y = yInit;
+		graphicsContext = gc;
+		playerColor=color;
+		equipe = equipeDAppartenance;
 	    
 	    angle = 0;
 
@@ -68,7 +72,7 @@ public class Player{
         sprite = new Sprite(tilesheetImage, 0,0, Duration.seconds(.2), side);
         sprite.setX(x);
         sprite.setY(y);
-        //directionArrow = sprite.getClip().;
+        //directionArrow = sprite.getClip().; (Commenté dans le dépôt initial)
 
 	    // Tous les joueurs ont une vitesse aleatoire entre 0.0 et 1.0
         // Random randomGenerator = new Random();
@@ -76,48 +80,10 @@ public class Player{
 
         // Pour commencer les joueurs ont une vitesse / un pas fixe
         step = 1;
-	    
-	    /** 
-	     * Event Listener du clavier 
-	     * quand une touche est pressee on la rajoute a la liste d'input
-	     *   
-	     */
-	    scene.setOnKeyPressed(
-			new EventHandler<KeyEvent>(){
-				public void handle(KeyEvent e){
-					String code = e.getCode().toString();
-					// only add once... prevent duplicates
-					if(!input.contains(code)){
-						input.add(code);
-					}
-				}
-			}
-		);
-
-	    /** 
-	     * Event Listener du clavier 
-	     * quand une touche est relachee on l'enleve de la liste d'input
-	     *   
-	     */
-	    scene.setOnKeyReleased(
-			new EventHandler<KeyEvent>(){
-				public void handle(KeyEvent e){
-					String code = e.getCode().toString();
-					input.remove(code);
-				}
-			}
-		);
-		new AnimationTimer(){
-	        public void handle(long currentNanoTime){
-				controlleur();
-			}
-		}.start(); // On lance la boucle de rafraichissement
 	}
 
-	/**
-	 *  Affichage du joueur
-	 */
-	void vue(){
+	//  Affichage du joueur
+	private void vue(){
 		graphicsContext.save(); // saves the current state on stack, including the current transform
 		rotate(graphicsContext, angle, x + directionArrow.getWidth() / 2, y + directionArrow.getHeight() / 2);
 		graphicsContext.drawImage(directionArrow, x, y);
@@ -129,30 +95,24 @@ public class Player{
 		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 	}
 	
-	/**
-	 *  Deplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
-	 */
-	void moveLeft(){	    
-		if(x > 10 /*&& x < 520*/){
+	//  Déplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
+	private void moveLeft(){	    
+		if(x > 10){
 			spriteAnimate();
 			x -= step;
 		}
 	}
 
-	/**
-	 *  Deplacement du joueur vers la droite
-	 */
-	void moveRight(){
-		if(/*x > 10 &&*/ x < 520){ // VAR GLOBALE OU PARAM
+	// Déplacement du joueur vers la droite
+	private void moveRight(){
+		if(x < largeurTerrain-80){
 			spriteAnimate();
 			x += step;
 		}
 	}
 
-	/**
-	 *  Rotation du joueur vers la gauche
-	 */
-	void turnLeft(){
+	// Rotation du joueur vers la gauche
+	private void turnLeft(){
 		if(angle > 0 && angle < 180){
 			angle += 1;
 		}else{
@@ -160,31 +120,26 @@ public class Player{
 		}
 	}
 
-	/**
-	 *  Rotation du joueur vers la droite
-	 */
-	void turnRight(){
-		if (angle > 0 && angle < 180){
+	// Rotation du joueur vers la droite
+	private void turnRight(){
+		if(angle > 0 && angle < 180){
 			angle -=1;
 		}else{
 			angle -= 1;
 		}
 	}
 
-	void shoot(){
+	private void shoot(){
 		sprite.playShoot();
 	}
 	
-	/**
-	 *  Déplacement en mode boost
-	 */
-	void boost(){
+	// Déplacement en mode boost
+	private void boost(){
 		x += step*2;
 		spriteAnimate();
 	}
 
-	void spriteAnimate(){
-		//System.out.println("Animating sprite");
+	private void spriteAnimate(){
 		if(!sprite.isRunning){
 			sprite.playContinuously();
 		}
@@ -192,37 +147,38 @@ public class Player{
 		sprite.setY(y);
 	}
 
-	/**
-	 *  Gére les modifications du modèle à partir des infos de la vue.
-	 */
-	void controlleur(){
-		if(haut){
-			if(input.contains("Q")){
-				this.moveLeft();
-			} 
-			if(input.contains("D")){
-				this.moveRight();
-			}
-			if(input.contains("Z")){
-				this.turnLeft();
-			} 
-			if(input.contains("S")){
-				this.turnRight();
-			}
-		}else{
-			if(input.contains("LEFT")){
-				this.moveLeft();
-			} 
-			if(input.contains("RIGHT")){
-				this.moveRight();
-			}
-			if(input.contains("UP")){
-				this.turnLeft();
-			} 
-			if(input.contains("DOWN")){
-				this.turnRight();
-			}
-		}	
+	//  Gére les modifications du modèle à partir des infos de la vue.
+	public void controlleur(ArrayList<String> input){
+		switch(equipe){
+			case UNE:
+				if(input.contains("Q")){
+					this.moveLeft();
+				} 
+				if(input.contains("D")){
+					this.moveRight();
+				}
+				if(input.contains("Z")){
+					this.turnLeft();
+				} 
+				if(input.contains("S")){
+					this.turnRight();
+				}
+				break;
+			case DEUX:
+				if(input.contains("LEFT")){
+					this.moveLeft();
+				} 
+				if(input.contains("RIGHT")){
+					this.moveRight();
+				}
+				if(input.contains("UP")){
+					this.turnLeft();
+				} 
+				if(input.contains("DOWN")){
+					this.turnRight();
+				}
+				break;
+		}
 		if(input.contains("SPACE")){
 			this.shoot();
 		}
