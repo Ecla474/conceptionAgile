@@ -1,5 +1,6 @@
 package fr.icom.info.m1.balleauprisonnier_mvn;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Player.orientation;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.geometry.*;
@@ -18,7 +19,7 @@ class Sprite extends ImageView{
     private Timeline timeline;
     public boolean isRunning;
 
-    public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, String side){
+    public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, Player.orientation orientationInitiale){
         //this.numCells = numCells;
 
         double cellWidth  = 64;//animationImage.getWidth() / numCells; //64x64
@@ -28,7 +29,7 @@ class Sprite extends ImageView{
         numCellsWalk = 9;
 
         int lineNumber = 8;
-        if(side == "top"){
+        if(orientationInitiale == Player.orientation.HAUT){
             lineNumber += 2;
         }
 

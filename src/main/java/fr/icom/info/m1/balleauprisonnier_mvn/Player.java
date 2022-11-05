@@ -22,42 +22,50 @@ public class Player{
 	private double angle = 90;
 	// Pas d'un joueur :
 	private double step;
+	// Couleurs possibles
+	public enum typeJoueur {BLUE, RED, SKELETON, ORC};
+	// Orientations possibles
+	public enum orientation {HAUT, BAS};
+	// Orientation
+	private orientation orientationActuelle;
 	// Couleur du joueur :
-	private String playerColor;
-	// Équipes :
-	public enum equipes {UNE, DEUX};
-	private equipes equipe;
+	private typeJoueur typeDeJoueur;
+	// Un projectile vient d'être tiré
+	private boolean tirEnCours;
 	  
 	// On une image globale du joueur 
-	Image directionArrow;
-	Sprite sprite;
-	ImageView PlayerDirectionArrow;
+	private Image directionArrow;
+	protected Sprite sprite;
+	private ImageView PlayerDirectionArrow;
 	  
-	GraphicsContext graphicsContext;
+	private GraphicsContext graphicsContext;
 
 	/**
-	 * Constructeur du Joueur
-	 * 
-	 * @param gc ContextGraphic dans lequel on va afficher le joueur
-	 * @param color couleur du joueur
-	 * @param yInit position verticale
+	 * Constructeur du joueur
+	 * @param gc Contexte graphique
+	 * @param color Couleur du joueur
+	 * @param xInit Position initiale du joueur en largeur du terrain
+	 * @param yInit Position initiale du joueur en longueur du terrain
+	 * @param orientationInitiale Orientation du joueur
+	 * @param largeurPlateau Largeur du terrain
+	 * @param vitesse Vitesse du joueur
 	 */
-	Player(GraphicsContext gc, String color, int xInit, int yInit, String side, equipes equipeDAppartenance, int largeurPlateau){
+	public Player(GraphicsContext gc, typeJoueur type, int xInit, int yInit, orientation orientationInitiale, int largeurPlateau, double vitesse){
 		largeurTerrain = largeurPlateau;
+		orientationActuelle = orientationInitiale;
+		tirEnCours = false;
 		// Tous les joueurs commencent au centre du canvas, 
 		x = xInit;
 		y = yInit;
 		graphicsContext = gc;
-		playerColor=color;
-		equipe = equipeDAppartenance;
+		typeDeJoueur=type;
 	    
 	    angle = 0;
 
 	    // On charge la representation du joueur
-        if(side=="top"){
+        if(orientationActuelle==Player.orientation.HAUT){
         	directionArrow = new Image("assets/PlayerArrowDown.png");
-		}
-		else{
+		}else{
 			directionArrow = new Image("assets/PlayerArrowUp.png");
 		}
         
@@ -68,18 +76,45 @@ public class Player{
         PlayerDirectionArrow.setSmooth(true);
         PlayerDirectionArrow.setCache(true);
 
-        Image tilesheetImage = new Image("assets/orc.png");
-        sprite = new Sprite(tilesheetImage, 0,0, Duration.seconds(.2), side);
+		// Attribution de l'image à un joueur :
+		Image tilesheetImage;
+        switch(typeDeJoueur){
+			case BLUE :
+				tilesheetImage = new Image("assets/PlayerBlue.png");
+				break;
+			case RED :
+				tilesheetImage = new Image("assets/PlayerRed.png");
+				break;
+			case SKELETON :
+				tilesheetImage = new Image("assets/skeleton.png");
+				break;
+			case ORC :
+				tilesheetImage = new Image("assets/orc.png");
+				break;
+			default:
+				tilesheetImage = new Image("assets/orc.png");
+				break;
+		}
+        sprite = new Sprite(tilesheetImage, 0,0, Duration.seconds(.2), orientationActuelle);
         sprite.setX(x);
         sprite.setY(y);
         //directionArrow = sprite.getClip().; (Commenté dans le dépôt initial)
 
-	    // Tous les joueurs ont une vitesse aleatoire entre 0.0 et 1.0
-        // Random randomGenerator = new Random();
-        // step = randomGenerator.nextFloat();
+	    // Tous les joueurs ont une vitesse aleatoire assignée (par appel direct de ce constructeur) ou aléatoire entre 0.0 et 1.0 (par appel du constructeur sans indication de vitesse).
+        step = vitesse;
+	}
 
-        // Pour commencer les joueurs ont une vitesse / un pas fixe
-        step = 1;
+	/**
+	 * Constructeur du joueur avec une vitesse aléatoire
+	 * @param gc Contexte graphique
+	 * @param type Type du joueur
+	 * @param xInit Position initiale du joueur en largeur du terrain
+	 * @param yInit Position initiale du joueur en longueur du terrain
+	 * @param orientationInitiale Orientation du joueur
+	 * @param largeurPlateau Largeur du terrain
+	 */
+	public Player(GraphicsContext gc, typeJoueur type, int xInit, int yInit, orientation orientationInitiale, int largeurPlateau){
+		this(gc, type, xInit, yInit, orientationInitiale, largeurPlateau, Math.random()*(1.0-0.0));
 	}
 
 	//  Affichage du joueur
@@ -90,6 +125,7 @@ public class Player{
 		graphicsContext.restore(); // back to original state (before rotation)
 	}
 
+	// 
 	private void rotate(GraphicsContext gc, double angle, double px, double py) {
 		Rotate r = new Rotate(angle, px, py);
 		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
@@ -139,6 +175,7 @@ public class Player{
 		spriteAnimate();
 	}
 
+	//
 	private void spriteAnimate(){
 		if(!sprite.isRunning){
 			sprite.playContinuously();
@@ -147,8 +184,12 @@ public class Player{
 		sprite.setY(y);
 	}
 
-	//  Gére les modifications du modèle à partir des infos de la vue.
-	public void controlleur(ArrayList<String> input){
+	/**
+	 * Gére les modifications du modèle à partir des infos de la vue.
+	 * @param input Liste des touches en train d'être appuyées.
+	 */
+	public boolean controlleur(ArrayList<String> input, Field.equipes equipe){
+		boolean shoot = false;
 		switch(equipe){
 			case UNE:
 				if(input.contains("Q")){
@@ -162,6 +203,13 @@ public class Player{
 				} 
 				if(input.contains("S")){
 					this.turnRight();
+				}
+				if(input.contains("SPACE") && !tirEnCours){
+					this.shoot();
+					shoot = true;
+					tirEnCours = true;
+				}else if(!input.contains("SPACE")){
+					tirEnCours = false;
 				}
 				break;
 			case DEUX:
@@ -177,11 +225,41 @@ public class Player{
 				if(input.contains("DOWN")){
 					this.turnRight();
 				}
+				if(input.contains("ENTER") && !tirEnCours){
+					this.shoot();
+					shoot =  true;
+					tirEnCours = true;
+				}else if(!input.contains("ENTER")){
+					tirEnCours = false;
+				}
 				break;
 		}
-		if(input.contains("SPACE")){
-			this.shoot();
-		}
 		this.vue();
+		return shoot;
+	}
+
+	/**
+	 * @return Retourne l'abscisse du joueur
+	 */
+	public double getX(){
+		return x;
+	}
+
+	/**
+	 * @return l'ordonée du joueur
+	 */
+	public double getY(){
+		return y;
+	}
+
+	/**
+	 * @return l'angle du joueur
+	 */
+	public double getAngle(){
+		return angle;
+	}
+
+	public orientation getOrientation(){
+		return orientationActuelle;
 	}
 }
