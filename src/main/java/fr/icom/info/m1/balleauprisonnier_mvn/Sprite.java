@@ -55,7 +55,7 @@ class Sprite extends ImageView{
         lineNumber += 8;
 
         shootClips = new Rectangle2D[numCellsShoot];
-        for (int i = 0; i < numCellsShoot; i++){
+        for(int i = 0; i < numCellsShoot; i++){
             shootClips[i] = new Rectangle2D(
                     i * cellWidth, cellHeight*lineNumber,
                     cellWidth, cellHeight

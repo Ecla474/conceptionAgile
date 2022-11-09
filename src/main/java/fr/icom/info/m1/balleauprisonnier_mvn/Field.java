@@ -129,9 +129,15 @@ public class Field extends Canvas{
 	 */
 	public void addProjectile(Player joueur){
 		double angle = joueur.getAngle();
-		if(joueur.getOrientation()==Player.orientation.HAUT){
-			angle+=45;
+		switch(joueur.getOrientation()){
+			case HAUT:
+				angle+=90;
+				break;
+			case BAS:
+				angle-=90;
+				break;
 		}
 		projectiles.add(new Projectile(gc, joueur.getX(), joueur.getY(), angle));
+		
 	}
 }

@@ -63,10 +63,13 @@ public class Player{
 	    angle = 0;
 
 	    // On charge la representation du joueur
-        if(orientationActuelle==Player.orientation.HAUT){
-        	directionArrow = new Image("assets/PlayerArrowDown.png");
-		}else{
-			directionArrow = new Image("assets/PlayerArrowUp.png");
+		switch(orientationActuelle){
+			case HAUT:
+				directionArrow = new Image("assets/PlayerArrowDown.png");
+				break;
+			case BAS:
+				directionArrow = new Image("assets/PlayerArrowUp.png");
+				break;
 		}
         
         PlayerDirectionArrow = new ImageView();
@@ -117,8 +120,8 @@ public class Player{
 		this(gc, type, xInit, yInit, orientationInitiale, largeurPlateau, Math.random()*(1.0-0.0));
 	}
 
-	//  Affichage du joueur
-	private void vue(){
+	//  Affichage de la flèche
+	private void affichageFleche(){
 		graphicsContext.save(); // saves the current state on stack, including the current transform
 		rotate(graphicsContext, angle, x + directionArrow.getWidth() / 2, y + directionArrow.getHeight() / 2);
 		graphicsContext.drawImage(directionArrow, x, y);
@@ -126,7 +129,7 @@ public class Player{
 	}
 
 	// 
-	private void rotate(GraphicsContext gc, double angle, double px, double py) {
+	private void rotate(GraphicsContext gc, double angle, double px, double py){
 		Rotate r = new Rotate(angle, px, py);
 		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 	}
@@ -149,19 +152,15 @@ public class Player{
 
 	// Rotation du joueur vers la gauche
 	private void turnLeft(){
-		if(angle > 0 && angle < 180){
-			angle += 1;
-		}else{
+		if(angle < 90){
 			angle += 1;
 		}
 	}
 
 	// Rotation du joueur vers la droite
 	private void turnRight(){
-		if(angle > 0 && angle < 180){
+		if(angle > -90){
 			angle -=1;
-		}else{
-			angle -= 1;
 		}
 	}
 
@@ -193,19 +192,19 @@ public class Player{
 		switch(equipe){
 			case UNE:
 				if(input.contains("Q")){
-					this.moveLeft();
+					moveLeft();
 				} 
 				if(input.contains("D")){
-					this.moveRight();
+					moveRight();
 				}
 				if(input.contains("Z")){
-					this.turnLeft();
+					turnLeft();
 				} 
 				if(input.contains("S")){
-					this.turnRight();
+					turnRight();
 				}
 				if(input.contains("SPACE") && !tirEnCours){
-					this.shoot();
+					shoot();
 					shoot = true;
 					tirEnCours = true;
 				}else if(!input.contains("SPACE")){
@@ -214,19 +213,19 @@ public class Player{
 				break;
 			case DEUX:
 				if(input.contains("LEFT")){
-					this.moveLeft();
+					moveLeft();
 				} 
 				if(input.contains("RIGHT")){
-					this.moveRight();
+					moveRight();
 				}
 				if(input.contains("UP")){
-					this.turnLeft();
+					turnLeft();
 				} 
 				if(input.contains("DOWN")){
-					this.turnRight();
+					turnRight();
 				}
 				if(input.contains("ENTER") && !tirEnCours){
-					this.shoot();
+					shoot();
 					shoot =  true;
 					tirEnCours = true;
 				}else if(!input.contains("ENTER")){
@@ -234,7 +233,7 @@ public class Player{
 				}
 				break;
 		}
-		this.vue();
+		this.affichageFleche();
 		return shoot;
 	}
 

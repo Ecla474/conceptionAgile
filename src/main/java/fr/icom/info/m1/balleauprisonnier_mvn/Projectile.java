@@ -25,8 +25,8 @@ public class Projectile {
      * Gére les modifications du modèle
      */
     public void controlleur(){
-        x = x + vitesse * Math.cos(direction);
-        y = y + vitesse * Math.sin(direction);
+        x = x + vitesse * Math.cos(Math.toRadians(direction));
+        y = y + vitesse * Math.sin(Math.toRadians(direction));
         vue();
     }
 
