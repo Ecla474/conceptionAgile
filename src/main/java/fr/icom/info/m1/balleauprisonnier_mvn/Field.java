@@ -7,13 +7,13 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.*;
 import javafx.scene.input.KeyEvent;
 import javafx.event.EventHandler;
 
 
 /**
- * Classe gerant le terrain de jeu.
+ * Classe gérant le terrain de jeu.
  */
 public class Field extends Canvas{
 	// Équipes :
@@ -29,7 +29,7 @@ public class Field extends Canvas{
 	// Tableau traçant les evenements
 	private ArrayList<String> input = new ArrayList<String>();
 	
-	private final GraphicsContext gc;
+	public final GraphicsContext gc;
 	private final int width;
 	private final int height;
 	
@@ -44,20 +44,19 @@ public class Field extends Canvas{
 		width = w;
 		height = h;
 		
-		// permet de capturer le focus et donc les evenements clavier et souris.
+		// Permet de capturer le focus et donc les événements clavier et souris.
 		this.setFocusTraversable(true);
-		
 		gc = this.getGraphicsContext2D();
 		
 		// On initialise le terrain de jeu
-		equipe1[0] = new Player(gc, Player.typeJoueur.BLUE,     w/4,   h-50, Player.orientation.BAS,     width, 0.5);
-		equipe1[1] = new Bot   (gc, Player.typeJoueur.SKELETON, w/2,   h-50, Player.orientation.BAS,     width, 0.5);
-		equipe1[2] = new Bot   (gc, Player.typeJoueur.SKELETON, 3*w/4, h-50, Player.orientation.BAS,     width, 0.5);
-		equipe2[0] = new Player(gc, Player.typeJoueur.RED,      w/4,   20, Player.orientation.HAUT, width, 1);
-		equipe2[1] = new Bot   (gc, Player.typeJoueur.ORC,      w/2,   20, Player.orientation.HAUT, width, 1);
-		equipe2[2] = new Bot   (gc, Player.typeJoueur.ORC,      3*w/4, 20, Player.orientation.HAUT, width, 1);
+		equipe1[0] = new Player(gc, Player.typeJoueur.BLUE,     w/4-26,   h-140, Player.orientation.BAS,     width, 0.5);
+		equipe1[1] = new Bot   (gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
+		equipe1[2] = new Bot   (gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
+		equipe2[0] = new Player(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1);
+		equipe2[1] = new Bot   (gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);
+		equipe2[2] = new Bot   (gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, 1);
 
-		// Event Listener du clavier : quand une touche est pressée, on la rajoute a la liste d'input.
+		// 𝘌𝘷𝘦𝘯𝘵 𝘓𝘪𝘴𝘵𝘦𝘯𝘦𝘳 du clavier : quand une touche est pressée, on la rajoute a la liste d'input.
 		this.setOnKeyPressed(
 			new EventHandler<KeyEvent>(){
 				public void handle(KeyEvent e){
@@ -70,7 +69,7 @@ public class Field extends Canvas{
 			}
 		);
 
-		// Event Listener du clavier : quand une touche est relachée, on l'enleve de la liste d'input.
+		// 𝘌𝘷𝘦𝘯𝘵 𝘓𝘪𝘴𝘵𝘦𝘯𝘦𝘳 du clavier : quand une touche est relachée, on l'enleve de la liste d'input.
 		this.setOnKeyReleased(
 			new EventHandler<KeyEvent>(){
 				public void handle(KeyEvent e){
@@ -80,12 +79,11 @@ public class Field extends Canvas{
 			}
 		);
 
-		// Boucle principale du jeu : handle() est appelee à chaque rafraichissement de frame (soit environ 60 fois par seconde)
+		// Boucle principale du jeu : handle() est appelee à chaque rafraîchissement de frame (soit environ 60 fois par seconde).
 		new AnimationTimer(){
 			public void handle(long currentNanoTime){	 
-				// On nettoie le canvas a chaque frame
-				gc.setFill( Color.LIGHTGRAY);
-				gc.fillRect(0, 0, width, height);
+				// On nettoie le canvas à chaque frame
+				gc.clearRect(0, 0, getWidth(), getHeight());
 				for(int i=0; i<nbrJoueursEquipe1; i++){
 					if(equipe1[i].controlleur(input, Field.equipes.UNE)){
 						addProjectile(equipe1[i]);
@@ -100,7 +98,7 @@ public class Field extends Canvas{
 					projectiles.get(i).controlleur();
 				}
 			}
-		}.start(); // On lance la boucle de rafraichissement 
+		}.start(); // On lance la boucle de rafraîchissement.
 		
 	}
 
@@ -137,7 +135,7 @@ public class Field extends Canvas{
 				angle-=90;
 				break;
 		}
-		projectiles.add(new Projectile(gc, joueur.getX(), joueur.getY(), angle));
+		projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+10, angle));
 		
 	}
 }

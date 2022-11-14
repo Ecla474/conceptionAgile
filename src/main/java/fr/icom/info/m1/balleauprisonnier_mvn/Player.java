@@ -32,12 +32,15 @@ public class Player{
 	private typeJoueur typeDeJoueur;
 	// Un projectile vient d'être tiré
 	private boolean tirEnCours;
-	  
-	// On une image globale du joueur 
+
+	// On une image globale de la flèche
 	private Image directionArrow;
 	protected Sprite sprite;
 	private ImageView PlayerDirectionArrow;
-	  
+	
+	Image tilesheetImage;
+
+
 	private GraphicsContext graphicsContext;
 
 	/**
@@ -80,7 +83,6 @@ public class Player{
         PlayerDirectionArrow.setCache(true);
 
 		// Attribution de l'image à un joueur :
-		Image tilesheetImage;
         switch(typeDeJoueur){
 			case BLUE :
 				tilesheetImage = new Image("assets/PlayerBlue.png");
@@ -128,15 +130,15 @@ public class Player{
 		graphicsContext.restore(); // back to original state (before rotation)
 	}
 
-	// 
+	// Gestion de la rotation de la flèche
 	private void rotate(GraphicsContext gc, double angle, double px, double py){
 		Rotate r = new Rotate(angle, px, py);
-		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-sprite.getHauteurCellule()/2.0);
 	}
 	
 	//  Déplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
 	private void moveLeft(){	    
-		if(x > 10){
+		if(x > 55){
 			spriteAnimate();
 			x -= step;
 		}
@@ -144,7 +146,7 @@ public class Player{
 
 	// Déplacement du joueur vers la droite
 	private void moveRight(){
-		if(x < largeurTerrain-80){
+		if(x < largeurTerrain-122){
 			spriteAnimate();
 			x += step;
 		}
@@ -169,10 +171,10 @@ public class Player{
 	}
 	
 	// Déplacement en mode boost
-	private void boost(){
+	/*private void boost(){
 		x += step*2;
 		spriteAnimate();
-	}
+	}*/
 
 	//
 	private void spriteAnimate(){
@@ -238,21 +240,21 @@ public class Player{
 	}
 
 	/**
-	 * @return Retourne l'abscisse du joueur
+	 * @return l'abscisse du joueur.
 	 */
 	public double getX(){
 		return x;
 	}
 
 	/**
-	 * @return l'ordonée du joueur
+	 * @return l'ordonée du joueur.
 	 */
 	public double getY(){
 		return y;
 	}
 
 	/**
-	 * @return l'angle du joueur
+	 * @return l'angle du joueur.
 	 */
 	public double getAngle(){
 		return angle;

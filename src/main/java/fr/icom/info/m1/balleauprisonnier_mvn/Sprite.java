@@ -8,92 +8,97 @@ import javafx.scene.image.*;
 import javafx.util.Duration;
 
 class Sprite extends ImageView{
-    private final Rectangle2D[] walkClips;
-    private final Rectangle2D[] shootClips;
-    //private int numCells;
-    private int numCellsWalk;
-    private int numCellsShoot;
-    private final Timeline walkTimeline;
-    private final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
-    private final Timeline shootTimeline;
-    private Timeline timeline;
-    public boolean isRunning;
+	private final Rectangle2D[] walkClips;
+	private final Rectangle2D[] shootClips;
+	//private int numCells;
+	private int numCellsWalk;
+	private int numCellsShoot;
+	private final Timeline walkTimeline;
+	private final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
+	private final Timeline shootTimeline;
+	private Timeline timeline;
+	public boolean isRunning;
+	private int hauteurCellule = 64;
+	private int largeurCellule = 64;
 
-    public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, Player.orientation orientationInitiale){
-        //this.numCells = numCells;
+	public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, Player.orientation orientationInitiale){
+		//this.numCells = numCells;
 
-        double cellWidth  = 64;//animationImage.getWidth() / numCells; //64x64
-        double cellHeight = 64;//animationImage.getHeight() / numRows;
+		numCellsWalk = 9;
 
+		int lineNumber = 8;
+		if(orientationInitiale == Player.orientation.HAUT){
+			lineNumber += 2;
+		}
 
-        numCellsWalk = 9;
+		walkClips = new Rectangle2D[numCellsWalk];
+		for(int i = 0; i < numCellsWalk; i++){
+			walkClips[i] = new Rectangle2D(
+					i * largeurCellule, hauteurCellule*lineNumber,
+					largeurCellule, hauteurCellule
+			);
+		}
 
-        int lineNumber = 8;
-        if(orientationInitiale == Player.orientation.HAUT){
-            lineNumber += 2;
-        }
+		setImage(animationImage);
+		setViewport(walkClips[0]);
 
-        walkClips = new Rectangle2D[numCellsWalk];
-        for(int i = 0; i < numCellsWalk; i++){
-            walkClips[i] = new Rectangle2D(
-                    i * cellWidth, cellHeight*lineNumber,
-                    cellWidth, cellHeight
-            );
-        }
+		walkTimeline = new Timeline(
+			new KeyFrame(frameTime, event -> {
+				frameCounter.set((frameCounter.get() + 1) % numCellsWalk);
+				setViewport(walkClips[frameCounter.get()]);
+			})
+		);
 
-        setImage(animationImage);
-        setViewport(walkClips[0]);
+		numCellsShoot = 13;
+		lineNumber += 8;
 
-        walkTimeline = new Timeline(
-            new KeyFrame(frameTime, event -> {
-                frameCounter.set((frameCounter.get() + 1) % numCellsWalk);
-                setViewport(walkClips[frameCounter.get()]);
-            })
-        );
+		shootClips = new Rectangle2D[numCellsShoot];
+		for(int i = 0; i < numCellsShoot; i++){
+			shootClips[i] = new Rectangle2D(
+					i * largeurCellule, hauteurCellule*lineNumber,
+					largeurCellule, hauteurCellule
+			);
+		}
 
-        numCellsShoot = 13;
-        lineNumber += 8;
+		shootTimeline = new Timeline(
+			new KeyFrame(frameTime, event -> {
+				frameCounter.set((frameCounter.get() + 1) % numCellsShoot);
+				setViewport(shootClips[frameCounter.get()]);
+			})
+		);
 
-        shootClips = new Rectangle2D[numCellsShoot];
-        for(int i = 0; i < numCellsShoot; i++){
-            shootClips[i] = new Rectangle2D(
-                    i * cellWidth, cellHeight*lineNumber,
-                    cellWidth, cellHeight
-            );
-        }
+		timeline = walkTimeline;
+		isRunning = false;
+	}
 
-        shootTimeline = new Timeline(
-            new KeyFrame(frameTime, event -> {
-                frameCounter.set((frameCounter.get() + 1) % numCellsShoot);
-                setViewport(shootClips[frameCounter.get()]);
-            })
-        );
+	public void playContinuously() {
+		isRunning = true;
+		frameCounter.set(0);
+		timeline = walkTimeline;
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.stop();
+		timeline.playFromStart();
+	}
 
-        timeline = walkTimeline;
-        isRunning = false;
-    }
+	public void playShoot(){
+		frameCounter.set(0);
+		timeline.stop();
+		timeline = shootTimeline;
+		timeline.setCycleCount(numCellsShoot);
+		timeline.setOnFinished(e -> playContinuously());
+		timeline.playFromStart();
+	}
 
-    public void playContinuously() {
-        isRunning = true;
-        frameCounter.set(0);
-        timeline = walkTimeline;
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.stop();
-        timeline.playFromStart();
-    }
+	public void stop() {
+		frameCounter.set(0);
+		setViewport(walkClips[frameCounter.get()]);
+		walkTimeline.stop();
+	}
 
-    public void playShoot(){
-        frameCounter.set(0);
-        timeline.stop();
-        timeline = shootTimeline;
-        timeline.setCycleCount(numCellsShoot);
-        timeline.setOnFinished(e -> playContinuously());
-        timeline.playFromStart();
-    }
-
-    public void stop() {
-        frameCounter.set(0);
-        setViewport(walkClips[frameCounter.get()]);
-        walkTimeline.stop();
-    }
+	/**
+	 * @return la hauteur d'une cellule
+	 */
+	public double getHauteurCellule(){
+		return hauteurCellule;
+	}
 }
