@@ -1,4 +1,7 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Player;
+
+import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
+import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.Sprite;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
@@ -35,7 +38,7 @@ public class Player{
 
 	// On une image globale de la flèche
 	private Image directionArrow;
-	protected Sprite sprite;
+	public Sprite sprite;
 	private ImageView PlayerDirectionArrow;
 	
 	Image tilesheetImage;

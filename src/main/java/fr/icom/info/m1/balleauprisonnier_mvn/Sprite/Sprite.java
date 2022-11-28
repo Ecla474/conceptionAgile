@@ -1,13 +1,13 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
 
-import fr.icom.info.m1.balleauprisonnier_mvn.Player.orientation;
+import fr.icom.info.m1.balleauprisonnier_mvn.Player.Player;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 import javafx.util.Duration;
 
-class Sprite extends ImageView{
+public class Sprite extends ImageView{
 	private final Rectangle2D[] walkClips;
 	private final Rectangle2D[] shootClips;
 	//private int numCells;

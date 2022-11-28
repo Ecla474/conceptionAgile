@@ -1,13 +1,15 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Field;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Bot.Bot;
+import fr.icom.info.m1.balleauprisonnier_mvn.Player.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.*;
 import javafx.scene.input.KeyEvent;
 import javafx.event.EventHandler;
 
@@ -50,7 +52,7 @@ public class Field extends Canvas{
 		
 		// On initialise le terrain de jeu
 		equipe1[0] = new Player(gc, Player.typeJoueur.BLUE,     w/4-26,   h-140, Player.orientation.BAS,     width, 0.5);
-		equipe1[1] = new Bot   (gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
+		equipe1[1] = new Bot(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
 		equipe1[2] = new Bot   (gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
 		equipe2[0] = new Player(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1);
 		equipe2[1] = new Bot   (gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);

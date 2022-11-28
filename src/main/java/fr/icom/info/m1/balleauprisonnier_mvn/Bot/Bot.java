@@ -1,9 +1,11 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Bot;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
+import fr.icom.info.m1.balleauprisonnier_mvn.Player.Player;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 
-public class Bot extends Player{
+public class Bot extends Player {
 	/**
 	 * Constructeur du joueur bot
 	 * @param gc Contexte graphique

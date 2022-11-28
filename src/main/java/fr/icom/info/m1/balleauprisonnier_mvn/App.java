@@ -1,5 +1,7 @@
 package fr.icom.info.m1.balleauprisonnier_mvn;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
+import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.Sprite;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
