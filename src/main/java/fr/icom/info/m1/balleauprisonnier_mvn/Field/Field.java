@@ -3,8 +3,8 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Field;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import fr.icom.info.m1.balleauprisonnier_mvn.Bot.Bot;
-import fr.icom.info.m1.balleauprisonnier_mvn.Player.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -12,6 +12,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.event.EventHandler;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 /**
@@ -45,18 +47,17 @@ public class Field extends Canvas{
 		super(w, h); 
 		width = w;
 		height = h;
-		
+
 		// Permet de capturer le focus et donc les événements clavier et souris.
 		this.setFocusTraversable(true);
 		gc = this.getGraphicsContext2D();
-		
 		// On initialise le terrain de jeu
 		equipe1[0] = new Player(gc, Player.typeJoueur.BLUE,     w/4-26,   h-140, Player.orientation.BAS,     width, 0.5);
 		equipe1[1] = new Bot(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
-		equipe1[2] = new Bot   (gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
+		equipe1[2] = new Bot(gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
 		equipe2[0] = new Player(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1);
-		equipe2[1] = new Bot   (gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);
-		equipe2[2] = new Bot   (gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, 1);
+		equipe2[1] = new Bot(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);
+		equipe2[2] = new Bot(gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, 1);
 
 		// 𝘌𝘷𝘦𝘯𝘵 𝘓𝘪𝘴𝘵𝘦𝘯𝘦𝘳 du clavier : quand une touche est pressée, on la rajoute a la liste d'input.
 		this.setOnKeyPressed(
@@ -80,9 +81,10 @@ public class Field extends Canvas{
 				}
 			}
 		);
-
 		// Boucle principale du jeu : handle() est appelee à chaque rafraîchissement de frame (soit environ 60 fois par seconde).
 		new AnimationTimer(){
+
+
 			public void handle(long currentNanoTime){	 
 				// On nettoie le canvas à chaque frame
 				gc.clearRect(0, 0, getWidth(), getHeight());
@@ -99,10 +101,17 @@ public class Field extends Canvas{
 				for(int i=0; i<projectiles.size(); i++){
 					projectiles.get(i).controlleur();
 				}
+				gc.setFill(Color.WHITE);
+				gc.setFont(new Font("", 60));
+				gc.fillText("0", width/2, (height/2)-45);
+				gc.fillText("0", width/2, (height/2)+65);
 			}
+
+
 		}.start(); // On lance la boucle de rafraîchissement.
 		
 	}
+
 
 	/**
 	 * @return Tableau des joueurs des 2 équipes.
@@ -121,7 +130,7 @@ public class Field extends Canvas{
 		return nbrJoueursEquipe1+nbrJoueursEquipe2;
 	}
 
-	/**
+	/*/**
 	 * Ajoute un nouveau projectile.
 	 * @param xInitial
 	 * @param yInitial
@@ -137,7 +146,9 @@ public class Field extends Canvas{
 				angle-=90;
 				break;
 		}
-		projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+10, angle));
+		projectiles.add(new Projectile());
+		projectiles.lastElement().getInstance(gc, joueur.getX()+10, joueur.getY()+10, angle);
 		
 	}
+
 }

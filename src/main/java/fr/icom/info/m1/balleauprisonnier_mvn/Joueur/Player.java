@@ -1,4 +1,4 @@
-package fr.icom.info.m1.balleauprisonnier_mvn.Player;
+package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
 import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.Sprite;
@@ -30,7 +30,7 @@ public class Player{
 	// Orientations possibles
 	public enum orientation {HAUT, BAS};
 	// Orientation
-	private orientation orientationActuelle;
+	public orientation orientationActuelle;
 	// Couleur du joueur :
 	private typeJoueur typeDeJoueur;
 	// Un projectile vient d'être tiré
@@ -65,13 +65,14 @@ public class Player{
 		y = yInit;
 		graphicsContext = gc;
 		typeDeJoueur=type;
-	    
+
 	    angle = 0;
 
 	    // On charge la representation du joueur
 		switch(orientationActuelle){
 			case HAUT:
-				directionArrow = new Image("assets/PlayerArrowDown.png");
+				directionArrow = new Image(
+						"assets/PlayerArrowDown.png");
 				break;
 			case BAS:
 				directionArrow = new Image("assets/PlayerArrowUp.png");
@@ -266,4 +267,6 @@ public class Player{
 	public orientation getOrientation(){
 		return orientationActuelle;
 	}
+
+
 }

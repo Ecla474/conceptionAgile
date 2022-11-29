@@ -1,6 +1,6 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
 
-import fr.icom.info.m1.balleauprisonnier_mvn.Player.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.geometry.*;

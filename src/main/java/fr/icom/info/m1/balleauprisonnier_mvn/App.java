@@ -31,6 +31,8 @@ public class App extends Application{
 		// Création du fond de la fenêtre et ajout à la racine de la scène
 		Image fond = new Image("assets/fond.png");
 		ImageView fondFenetre = new ImageView(fond);
+
+
 		root.getChildren().add(fondFenetre);
 
 		// Création du terrain de jeu et ajout à la racine de la scène

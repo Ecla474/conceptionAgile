@@ -10,16 +10,27 @@ public class Projectile{
 	private double direction;
 	private Image representation;
 	private GraphicsContext gc;
-	
 
-	public Projectile(GraphicsContext gcParent, double xInitial, double yInitial, double directionInitiale){
+	private static Projectile instance = null;
+
+	public Projectile getInstance(GraphicsContext gcParent, double xInitial, double yInitial, double directionInitiale){
 		gc = gcParent;
 		vitesse = 1;
 		representation = new Image("assets/ball.png");
 		x = xInitial;
 		y = yInitial;
 		direction = directionInitiale;
+		return instance;
 	}
+
+	/*private Projectile(/*GraphicsContext gcParent, double xInitial, double yInitial, double directionInitiale){
+		/*gc = gcParent;
+		vitesse = 1;
+		representation = new Image("assets/ball.png");
+		x = xInitial;
+		y = yInitial;
+		direction = directionInitiale
+	}*/
 
 	/**
 	 * Gére les modifications du modèle
