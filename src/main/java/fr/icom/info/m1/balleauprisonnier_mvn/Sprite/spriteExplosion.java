@@ -7,19 +7,22 @@ import javafx.scene.image.*;
 import javafx.util.Duration;
 
 public class spriteExplosion extends Sprite{
+	/**** DONNÉES MEMBRES ****/
 	private final Rectangle2D[] walkClips;
 	private final Rectangle2D[] shootClips;
-	//private int numCells;
-	protected int numCellsWalk;
-	protected int numCellsShoot;
+	private int numCellsWalk;
+	private int numCellsShoot;
 	private final Timeline walkTimeline;
 	private final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
-	protected final Timeline shootTimeline;
+	private final Timeline shootTimeline;
 	private Timeline timeline;
-	public boolean isRunning;
+	/* Dimensions d'une cellule */
 	private int hauteurCellule = 146;
 	private int largeurCellule = 112;
 
+	/**
+	 * Génére le sprite de l'explosion.
+	 */
 	public spriteExplosion(){
 		numCellsWalk = 6;
 		int lineNumber = 0;
@@ -65,6 +68,9 @@ public class spriteExplosion extends Sprite{
 		isRunning = false;
 	}
 
+	/**
+	 * Joue le sprite de l'explosion.
+	 */
 	public void playShoot(){
 		frameCounter.set(0);
 		timeline.stop();
@@ -72,11 +78,5 @@ public class spriteExplosion extends Sprite{
 		timeline.setCycleCount(numCellsShoot);
 		//timeline.setOnFinished(e -> playContinuously());
 		timeline.playFromStart();
-	}
-
-	public void stop() {
-		frameCounter.set(0);
-		setViewport(walkClips[frameCounter.get()]);
-		walkTimeline.stop();
 	}
 }

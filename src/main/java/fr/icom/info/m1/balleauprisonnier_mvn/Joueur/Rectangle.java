@@ -1,21 +1,14 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
 public class Rectangle{
-	public Rectangle(){
-		x = 0;
-	}
-    /**
-     * Position horizontale du joueur
-     */
-	protected double x;
-    /**
-     * Position verticale du joueur
-     */
+	/**** DONNÉES MEMBRES */
 	protected double y;
-
+	protected double x;
 	protected double largeur;
 	protected double hauteur;
 
+
+	/**** MÉTHODES À HÉRITER ****/
     /**
 	 * @return l'abscisse du joueur.
 	 */

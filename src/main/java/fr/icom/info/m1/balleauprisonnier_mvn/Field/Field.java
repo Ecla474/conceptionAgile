@@ -25,37 +25,40 @@ import javafx.scene.Group;
  * Classe gérant le terrain de jeu.
  */
 public class Field extends Canvas{
-	// Équipes :
+	/**** DONNÉES MEMBRES ****/
+	/* Dimension du Canvas */
+	private final int width;
+	private final int height;
+
+	/* Gestion des équipes */
 	public enum equipes {UNE, DEUX};
 	private Vector<Player> equipe1 = new Vector<Player>();
 	private Vector<Player> equipe2 = new Vector<Player>();
-	private Group root;
-
+	
+	// Projectiles
+	private Vector<Projectile> projectiles = new Vector<Projectile>();
 	// Enregistrement et écriture des scores
 	private int score1;
 	private int score2;
 	private Text text;
-
-
-	public spriteExplosion spriteDExplosion;
-
-	// Projectiles
-	private Vector<Projectile> projectiles = new Vector<Projectile>();
-
+	
 	// Tableau traçant les événements
 	private ArrayList<String> input = new ArrayList<String>();
-	
-	public final GraphicsContext gc;
-	private final int width;
-	private final int height;
 
+	/* Éléments graphiques */
+	private Group root;
+	private final GraphicsContext gc;
+	/* Et gestion des explosion lorsqu'un Joueur est Touché par un projectile */
+	public spriteExplosion spriteDExplosion;
 	private boolean presenceExplosion = false;
 	private	double xExplosion = 0;
 	private double yExplosion = 0;
 
-	
+
+
+	/**** MÉTHODES PUBLIQUES ****/
 	/**
-	 * Canvas dans lequel on va dessiner le jeu.
+	 * Constructeur du Canvas dans lequel on va dessiner le jeu.
 	 * @param scene Scene principale du jeu a laquelle on va ajouter notre Canvas
 	 * @param w Largeur du canvas
 	 * @param h Hauteur du canvas
@@ -128,6 +131,45 @@ public class Field extends Canvas{
 
 	}
 
+	/**
+	 * @return Tableau des joueurs des 2 équipes.
+	 */
+	public Player[] getJoueurs(){
+		Player[] retour = new Player[equipe1.size()+equipe2.size()];
+		Vector<Player> joueurs = new Vector<Player>();
+		joueurs.addAll(equipe1);
+		joueurs.addAll(equipe2);
+		joueurs.copyInto(retour);
+		return retour;
+	}
+
+	/**
+	 * @return le nombre de joueurs
+	 */
+	public int getNbrJoueurs(){
+		return equipe1.size()+equipe2.size();
+	}
+
+	/**
+	 * Ajoute un nouveau projectile.
+	 * @param xInitial
+	 * @param yInitial
+	 * @param directionInitiale
+	 */
+	public void addProjectile(Player joueur){
+		switch(joueur.getOrientation()){
+			case HAUT:
+				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+10, joueur.getAngle()+90, height-140, Player.orientation.HAUT, 80, width-80));
+				break;
+			case BAS:
+				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+20, joueur.getAngle()-90, 20, Player.orientation.BAS, 80, width-80));
+				break;
+		}
+	}
+
+
+	/**** MÉTHODES PRIVÉES ****/
+	// Contrôleur du Canvas.
 	private void controleur(){
 		// Appels aux contrôleurs des joueurs et des bots
 		for(int i=0; i<equipe1.size(); i++){
@@ -213,6 +255,7 @@ public class Field extends Canvas{
 		vueScore();
 	}
 
+	// Vue du terrain de jeu
 	private void vueTerrain(boolean presenceExplosion, double x, double y){
 		// On nettoie le canvas à chaque frame
 		gc.clearRect(0, 0, getWidth(), getHeight());
@@ -238,6 +281,7 @@ public class Field extends Canvas{
 		}
 	}
 
+	// Vue du score du jeu
 	private void vueScore(){
 		gc.setFill(Color.WHITE);
 		gc.setFont(new Font("", 60));
@@ -257,6 +301,7 @@ public class Field extends Canvas{
 		gc.fillText(Integer.toString(score2), width/2-15*nbrChiffre, (height/2)+65);
 	}
 
+	/* Fonctions de détection de collisions (src. : https://zestedesavoir.com/tutoriels/2835/theorie-des-collisions/) */
 	private boolean CollisionPointCercle(double x, double y,Projectile C){
 		double d2 = (x-C.getX())*(x-C.getX()) + (y-C.getY())*(y-C.getY());
 		int rayon = 10;
@@ -340,44 +385,5 @@ public class Field extends Canvas{
 			return true;   // cas E
 		}
 		return false;  // cas B   
-	}
-
-
-
-
-	/**
-	 * @return Tableau des joueurs des 2 équipes.
-	 */
-	public Player[] getJoueurs(){
-		Player[] retour = new Player[equipe1.size()+equipe2.size()];
-		Vector<Player> joueurs = new Vector<Player>();
-		joueurs.addAll(equipe1);
-		joueurs.addAll(equipe2);
-		joueurs.copyInto(retour);
-		return retour;
-	}
-
-	/**
-	 * @return le nombre de joueurs
-	 */
-	public int getNbrJoueurs(){
-		return equipe1.size()+equipe2.size();
-	}
-
-	/**
-	 * Ajoute un nouveau projectile.
-	 * @param xInitial
-	 * @param yInitial
-	 * @param directionInitiale
-	 */
-	public void addProjectile(Player joueur){
-		switch(joueur.getOrientation()){
-			case HAUT:
-				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+10, joueur.getAngle()+90, height-140, Player.orientation.HAUT));
-				break;
-			case BAS:
-				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+20, joueur.getAngle()-90, 20, Player.orientation.BAS));
-				break;
-		}
 	}
 }

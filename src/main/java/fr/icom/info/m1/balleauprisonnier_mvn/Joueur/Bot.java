@@ -8,7 +8,6 @@ import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Bot extends Player{
-	
 	/**
 	 * Constructeur du joueur bot
 	 * @param gc Contexte graphique

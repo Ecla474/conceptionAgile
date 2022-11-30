@@ -16,6 +16,7 @@ import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.SpritePersonnage;
  * Classe gérant un joueur
  */
 public class Player extends Rectangle{
+	/**** DONNÉES MEMBRES */
 	// Largeur du terrain :
 	private final int largeurTerrain;
 	// Rotation du joueur (devrait toujours être en 0 et 180) :
@@ -35,17 +36,19 @@ public class Player extends Rectangle{
 
 	// On une image globale de la flèche
 	private Image directionArrow;
-	public SpritePersonnage sprite;
 	private ImageView PlayerDirectionArrow;
+	// Sprite représentant le personnage
+	public SpritePersonnage sprite;
 	
 	private Image tilesheetImage;
 
-
 	private GraphicsContext graphicsContext;
 
+	// Stratégie de contrôle des Joueurs
 	public enum strategie {CONTROLLEE, STATIQUE, HASARD, OPPOSE_AU_TIR, REJOINDRE_JOUEURS};
 	public strategie strategieEnCours;
 
+	/**** MÉTHODES PUBLIQUES */
 	/**
 	 * Constructeur du joueur
 	 * @param gc Contexte graphique
@@ -129,10 +132,16 @@ public class Player extends Rectangle{
 		this(gc, type, xInit, yInit, orientationInitiale, largeurPlateau, Math.random()*(1.0-0.0));
 	}
 
+	/**
+	 * Destructeur explicite
+	 */
 	public void finalize(){
 		sprite = null;
 	}
 	
+	/**
+	 * Vue du joueur
+	 */
 	public void vue(){
 		// Affichage de la flèche
 		if(strategieEnCours==strategie.CONTROLLEE){ // (Les bots ne tirent pas)
@@ -143,70 +152,11 @@ public class Player extends Rectangle{
 		}
 	}
 
-	// Gestion de la rotation de la flèche
-	private void rotate(GraphicsContext gc, double angle, double px, double py){
-		Rotate r = new Rotate(angle, px, py);
-		switch(orientationActuelle){
-			case HAUT:
-				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-32);
-				break;
-			case BAS:
-				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-64);
-				break;
-		}
-	}
-	
-	//  Déplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
-	protected void moveLeft(){	    
-		if(x > 55){
-			spriteAnimate();
-			x -= step;
-		}
-	}
-
-	// Déplacement du joueur vers la droite
-	protected void moveRight(){
-		if(x < largeurTerrain-122){
-			spriteAnimate();
-			x += step;
-		}
-	}
-
-	// Rotation du joueur vers la gauche
-	protected void turnLeft(){
-		if(angle < 90){
-			angle += 1;
-		}
-	}
-
-	// Rotation du joueur vers la droite
-	protected void turnRight(){
-		if(angle > -90){
-			angle -=1;
-		}
-	}
-
-	private void shoot(){
-		if(this.sprite != null){
-			sprite.playShoot();
-		}
-	}
-
-	//
-	private void spriteAnimate(){
-		if(this.sprite != null){
-			if(!sprite.isItRunning()){
-				sprite.playContinuously();
-			}
-			sprite.setX(x);
-			sprite.setY(y);
-		}
-	}
-
 	/**
-	 * @param input 
-	 * @param equipe
-	 * @return
+	 * Contrôleur du Joueur
+	 * @param input liste des évènements claviers en cours
+	 * @param equipe équipe d'appartenance du joueur
+	 * @return si un tir de Projectile est en cours
 	 */
 	public boolean controleur(ArrayList<String> input, Field.equipes equipe){
 		boolean shoot = false;
@@ -264,7 +214,73 @@ public class Player extends Rectangle{
 		return angle;
 	}
 
+	/**
+	 * @return l'orientation du joueur
+	 */
 	public orientation getOrientation(){
 		return orientationActuelle;
+	}
+
+
+	/**** MÉTHODES PRIVÉES ****/
+	// Gestion de la rotation de la flèche
+	private void rotate(GraphicsContext gc, double angle, double px, double py){
+		Rotate r = new Rotate(angle, px, py);
+		switch(orientationActuelle){
+			case HAUT:
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-32);
+				break;
+			case BAS:
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-64);
+				break;
+		}
+	}
+	
+	//  Déplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
+	protected void moveLeft(){	    
+		if(x > 55){
+			spriteAnimate();
+			x -= step;
+		}
+	}
+
+	// Déplacement du joueur vers la droite
+	protected void moveRight(){
+		if(x < largeurTerrain-122){
+			spriteAnimate();
+			x += step;
+		}
+	}
+
+	// Rotation du joueur vers la gauche
+	private void turnLeft(){
+		if(angle < 90){
+			angle += 1;
+		}
+	}
+
+	// Rotation du joueur vers la droite
+	private void turnRight(){
+		if(angle > -90){
+			angle -=1;
+		}
+	}
+
+	// Joue le sprite adapté lors du lancer d'un Projectile
+	private void shoot(){
+		if(this.sprite != null){
+			sprite.playShoot();
+		}
+	}
+
+	// Active l'animation du personnage
+	private void spriteAnimate(){
+		if(this.sprite != null){
+			if(!sprite.isItRunning()){
+				sprite.playContinuously();
+			}
+			sprite.setX(x);
+			sprite.setY(y);
+		}
 	}
 }
