@@ -1,29 +1,27 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
 
-import fr.icom.info.m1.balleauprisonnier_mvn.Player.orientation;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 import javafx.util.Duration;
 
-class Sprite extends ImageView{
+public class SpritePersonnage extends Sprite{
 	private final Rectangle2D[] walkClips;
 	private final Rectangle2D[] shootClips;
-	//private int numCells;
-	private int numCellsWalk;
-	private int numCellsShoot;
+	protected int numCellsWalk;
+	protected int numCellsShoot;
 	private final Timeline walkTimeline;
-	private final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
-	private final Timeline shootTimeline;
-	private Timeline timeline;
-	public boolean isRunning;
-	private int hauteurCellule = 64;
-	private int largeurCellule = 64;
+	private final IntegerProperty frameCounter;
+	protected final Timeline shootTimeline;
 
-	public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, Player.orientation orientationInitiale){
-		//this.numCells = numCells;
 
+
+	public SpritePersonnage(Image animationImage, int numCells, int numRows, Duration frameTime, Player.orientation orientationInitiale){
+		frameCounter = new SimpleIntegerProperty(0);
+		hauteurCellule = 64;
+		largeurCellule = 64;
 		numCellsWalk = 9;
 
 		int lineNumber = 8;
@@ -95,10 +93,5 @@ class Sprite extends ImageView{
 		walkTimeline.stop();
 	}
 
-	/**
-	 * @return la hauteur d'une cellule
-	 */
-	public double getHauteurCellule(){
-		return hauteurCellule;
-	}
+
 }

@@ -1,4 +1,4 @@
-package fr.icom.info.m1.balleauprisonnier_mvn;
+package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
@@ -8,26 +8,26 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
+import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.SpritePersonnage;
+
+
 /**
  * Classe gérant un joueur
  */
-public class Player{
+public class Player extends Rectangle{
 	// Largeur du terrain :
 	private final int largeurTerrain;
-	// Position horizontale du joueur :
-	private double x;
-	// Position verticale du joueur :
-	private final double y;
 	// Rotation du joueur (devrait toujours être en 0 et 180) :
 	private double angle = 90;
 	// Pas d'un joueur :
-	private double step;
+	protected double step;
 	// Couleurs possibles
 	public enum typeJoueur {BLUE, RED, SKELETON, ORC};
 	// Orientations possibles
 	public enum orientation {HAUT, BAS};
 	// Orientation
-	private orientation orientationActuelle;
+	protected orientation orientationActuelle;
 	// Couleur du joueur :
 	private typeJoueur typeDeJoueur;
 	// Un projectile vient d'être tiré
@@ -35,13 +35,16 @@ public class Player{
 
 	// On une image globale de la flèche
 	private Image directionArrow;
-	protected Sprite sprite;
+	public SpritePersonnage sprite;
 	private ImageView PlayerDirectionArrow;
 	
-	Image tilesheetImage;
+	private Image tilesheetImage;
 
 
 	private GraphicsContext graphicsContext;
+
+	public enum strategie {CONTROLLEE, STATIQUE, HASARD, OPPOSE_AU_TIR, REJOINDRE_JOUEURS};
+	public strategie strategieEnCours;
 
 	/**
 	 * Constructeur du joueur
@@ -62,6 +65,9 @@ public class Player{
 		y = yInit;
 		graphicsContext = gc;
 		typeDeJoueur=type;
+		largeur = 10; // A ADAPTER !!!!
+		hauteur = 10;
+		strategieEnCours = Player.strategie.CONTROLLEE;
 	    
 	    angle = 0;
 
@@ -100,9 +106,10 @@ public class Player{
 				tilesheetImage = new Image("assets/orc.png");
 				break;
 		}
-        sprite = new Sprite(tilesheetImage, 0,0, Duration.seconds(.2), orientationActuelle);
+        sprite = new SpritePersonnage(tilesheetImage, 0, 0, Duration.seconds(.2), orientationActuelle);
         sprite.setX(x);
         sprite.setY(y);
+
         //directionArrow = sprite.getClip().; (Commenté dans le dépôt initial)
 
 	    // Tous les joueurs ont une vitesse aleatoire assignée (par appel direct de ce constructeur) ou aléatoire entre 0.0 et 1.0 (par appel du constructeur sans indication de vitesse).
@@ -122,22 +129,35 @@ public class Player{
 		this(gc, type, xInit, yInit, orientationInitiale, largeurPlateau, Math.random()*(1.0-0.0));
 	}
 
-	//  Affichage de la flèche
-	private void affichageFleche(){
-		graphicsContext.save(); // saves the current state on stack, including the current transform
-		rotate(graphicsContext, angle, x + directionArrow.getWidth() / 2, y + directionArrow.getHeight() / 2);
-		graphicsContext.drawImage(directionArrow, x, y);
-		graphicsContext.restore(); // back to original state (before rotation)
+	public void finalize(){
+		sprite = null;
+	}
+	
+	public void vue(){
+		// Affichage de la flèche
+		if(strategieEnCours==strategie.CONTROLLEE){ // (Les bots ne tirent pas)
+			graphicsContext.save(); // saves the current state on stack, including the current transform
+			rotate(graphicsContext, angle, x + directionArrow.getWidth() / 2, y + directionArrow.getHeight() / 2);
+			graphicsContext.drawImage(directionArrow, x, y);
+			graphicsContext.restore(); // back to original state (before rotation)
+		}
 	}
 
 	// Gestion de la rotation de la flèche
 	private void rotate(GraphicsContext gc, double angle, double px, double py){
 		Rotate r = new Rotate(angle, px, py);
-		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-sprite.getHauteurCellule()/2.0);
+		switch(orientationActuelle){
+			case HAUT:
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-32);
+				break;
+			case BAS:
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy()-64);
+				break;
+		}
 	}
 	
 	//  Déplacement du joueur vers la gauche, on cantonne le joueur sur le plateau de jeu
-	private void moveLeft(){	    
+	protected void moveLeft(){	    
 		if(x > 55){
 			spriteAnimate();
 			x -= step;
@@ -145,7 +165,7 @@ public class Player{
 	}
 
 	// Déplacement du joueur vers la droite
-	private void moveRight(){
+	protected void moveRight(){
 		if(x < largeurTerrain-122){
 			spriteAnimate();
 			x += step;
@@ -153,43 +173,42 @@ public class Player{
 	}
 
 	// Rotation du joueur vers la gauche
-	private void turnLeft(){
+	protected void turnLeft(){
 		if(angle < 90){
 			angle += 1;
 		}
 	}
 
 	// Rotation du joueur vers la droite
-	private void turnRight(){
+	protected void turnRight(){
 		if(angle > -90){
 			angle -=1;
 		}
 	}
 
 	private void shoot(){
-		sprite.playShoot();
+		if(this.sprite != null){
+			sprite.playShoot();
+		}
 	}
-	
-	// Déplacement en mode boost
-	/*private void boost(){
-		x += step*2;
-		spriteAnimate();
-	}*/
 
 	//
 	private void spriteAnimate(){
-		if(!sprite.isRunning){
-			sprite.playContinuously();
+		if(this.sprite != null){
+			if(!sprite.isItRunning()){
+				sprite.playContinuously();
+			}
+			sprite.setX(x);
+			sprite.setY(y);
 		}
-		sprite.setX(x);
-		sprite.setY(y);
 	}
 
 	/**
-	 * Gére les modifications du modèle à partir des infos de la vue.
-	 * @param input Liste des touches en train d'être appuyées.
+	 * @param input 
+	 * @param equipe
+	 * @return
 	 */
-	public boolean controlleur(ArrayList<String> input, Field.equipes equipe){
+	public boolean controleur(ArrayList<String> input, Field.equipes equipe){
 		boolean shoot = false;
 		switch(equipe){
 			case UNE:
@@ -235,22 +254,7 @@ public class Player{
 				}
 				break;
 		}
-		this.affichageFleche();
 		return shoot;
-	}
-
-	/**
-	 * @return l'abscisse du joueur.
-	 */
-	public double getX(){
-		return x;
-	}
-
-	/**
-	 * @return l'ordonée du joueur.
-	 */
-	public double getY(){
-		return y;
 	}
 
 	/**
