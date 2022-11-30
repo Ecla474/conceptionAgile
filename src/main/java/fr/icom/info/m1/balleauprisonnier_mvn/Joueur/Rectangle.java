@@ -1,5 +1,8 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
+/**
+ * Classe servant à la détection de collisions.
+ */
 public class Rectangle{
 	/**** DONNÉES MEMBRES */
 	protected double y;

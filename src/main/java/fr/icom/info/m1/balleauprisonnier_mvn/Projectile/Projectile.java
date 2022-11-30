@@ -1,9 +1,12 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Projectile;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 
-import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
+/**
+ * Classe implémentant un Projectile.
+ */
 public class Projectile{
 	/***** DONNÉES MEMBRES *****/
 	/* Propriétés physiques */

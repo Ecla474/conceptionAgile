@@ -1,12 +1,17 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
+
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 
-import javafx.animation.*;
 import javafx.beans.property.*;
-import javafx.geometry.*;
-import javafx.scene.image.*;
 import javafx.util.Duration;
+import javafx.scene.image.*;
+import javafx.animation.*;
+import javafx.geometry.*;
 
+
+/**
+ * Classe implémentant les sprites des joueurs.
+ */
 public class SpritePersonnage extends Sprite{
 	/**** DONNÉES MEMBRES */
 	private final Rectangle2D[] walkClips;

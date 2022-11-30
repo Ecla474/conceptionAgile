@@ -3,23 +3,27 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Field;
 import java.util.ArrayList;
 import java.util.Vector;
 
-
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerFactory;
+import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.SpriteExplosion;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerInterface;
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Rectangle;
 import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
-import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.spriteExplosion;
-import javafx.animation.AnimationTimer;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.canvas.Canvas;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerFactory;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Rectangle;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
+
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.Text;
+import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.canvas.Canvas;
 import javafx.event.EventHandler;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.Scene;
+
+
+
+
 import javafx.scene.Group;
 
 
@@ -51,7 +55,7 @@ public class Field extends Canvas{
 	private Group root;
 	private final GraphicsContext gc;
 	/* Et gestion des explosion lorsqu'un Joueur est Touché par un projectile */
-	public spriteExplosion spriteDExplosion;
+	public SpriteExplosion spriteDExplosion;
 	private boolean presenceExplosion = false;
 	private	double xExplosion = 0;
 	private double yExplosion = 0;
@@ -83,14 +87,14 @@ public class Field extends Canvas{
 		// On initialise le terrain de jeu
 		PlayerInterface fact = new PlayerFactory();
 
-		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.BLUE,     w/4-24,   h-140, Player.orientation.BAS, null,    width, 0.5));
-		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS, Bot.strategie.OPPOSE_AU_TIR,     width, 0.5));
-		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, 3*w/4-36, h-140, Player.orientation.BAS,   Bot.strategie.OPPOSE_AU_TIR,   width,  0.5));
-		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, null,width, 1));
-		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, Bot.strategie.OPPOSE_AU_TIR, width, 1));
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.BLUE,     w/4-24,   h-140,    Player.orientation.BAS,  null,                 width, 0.5));
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140,    Player.orientation.BAS,  Bot.strategie.HASARD, width, 0.5));
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, 3*w/4-36, h-140,    Player.orientation.BAS,  Bot.strategie.OPPOSE_AU_TIR, width,  0.5));
+		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, null,                 width, 1));
+		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, Bot.strategie.REJOINDRE_JOUEURS, width, 1));
 		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, Bot.strategie.OPPOSE_AU_TIR, width, 1));
 
-		spriteDExplosion = new spriteExplosion();
+		spriteDExplosion = new SpriteExplosion();
 
 		// 𝘌𝘷𝘦𝘯𝘵 𝘓𝘪𝘴𝘵𝘦𝘯𝘦𝘳 du clavier : quand une touche est pressée, on la rajoute a la liste d'input.
 		this.setOnKeyPressed(

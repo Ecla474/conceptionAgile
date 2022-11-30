@@ -1,12 +1,16 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
 
-import javafx.animation.*;
 import javafx.beans.property.*;
-import javafx.geometry.*;
-import javafx.scene.image.*;
 import javafx.util.Duration;
+import javafx.scene.image.*;
+import javafx.animation.*;
+import javafx.geometry.*;
 
-public class spriteExplosion extends Sprite{
+
+/**
+ * Classe implémentant le sprite d'une explosion (lorsqu'un joueur est touché par un Projectile).
+ */
+public class SpriteExplosion extends Sprite{
 	/**** DONNÉES MEMBRES ****/
 	private final Rectangle2D[] walkClips;
 	private final Rectangle2D[] shootClips;
@@ -23,7 +27,7 @@ public class spriteExplosion extends Sprite{
 	/**
 	 * Génére le sprite de l'explosion.
 	 */
-	public spriteExplosion(){
+	public SpriteExplosion(){
 		numCellsWalk = 6;
 		int lineNumber = 0;
 

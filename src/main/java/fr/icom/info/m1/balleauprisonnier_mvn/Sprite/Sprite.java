@@ -3,7 +3,10 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Sprite;
 import javafx.scene.image.*;
 import javafx.animation.*;
 
-public class Sprite extends ImageView{
+/**
+ * Classe abstraite permettant d'instancier les classes SpriteExplosion et SpritePersonnage.
+ */
+abstract class Sprite extends ImageView{
     /**** DONNÉES MEMBRES ****/
     protected Timeline timeline;
 	protected boolean isRunning;

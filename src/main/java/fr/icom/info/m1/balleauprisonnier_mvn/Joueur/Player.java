@@ -2,18 +2,19 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 
-import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.SpritePersonnage;
+import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 
 
 /**
- * Classe gérant un joueur
+ * Classe implémentant un joueur
  */
 public class Player extends Rectangle{
 	/**** DONNÉES MEMBRES */

@@ -2,8 +2,9 @@ package fr.icom.info.m1.balleauprisonnier_mvn.App;
 
 import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 import javafx.application.Application;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

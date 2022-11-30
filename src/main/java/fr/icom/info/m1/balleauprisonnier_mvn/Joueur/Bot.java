@@ -8,6 +8,9 @@ import java.util.Date;
 
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * Classe implémentant un joueur commandée par une IA.
+ */
 public class Bot extends Player{
 	/**
 	 * Constructeur du joueur bot
