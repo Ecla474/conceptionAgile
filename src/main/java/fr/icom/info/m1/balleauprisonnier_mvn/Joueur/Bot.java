@@ -1,10 +1,11 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
+import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
+
 import java.util.Calendar;
+import java.util.Vector;
 import java.util.Date;
 
-import java.util.Vector;
-import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Bot extends Player{
@@ -18,7 +19,7 @@ public class Bot extends Player{
 	 * @param largeurPlateau Largeur du terrain
 	 * @param vitesse Vitesse du joueur
 	 */
-	public Bot(GraphicsContext gc, typeJoueur color, int xInit, int yInit, Player.orientation orientationInitiale, int largeurPlateau, strategie strategieAdoptee, double vitesse){
+	public Bot(GraphicsContext gc, typeJoueur color, int xInit, int yInit, Player.orientation orientationInitiale,strategie strategieAdoptee, int largeurPlateau,  double vitesse){
 		super(gc, color, xInit, yInit, orientationInitiale, largeurPlateau, vitesse);
 		strategieEnCours = strategieAdoptee; 
 	}

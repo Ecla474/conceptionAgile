@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerFactory;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerInterface;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Rectangle;
 import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.spriteExplosion;
@@ -34,7 +36,7 @@ public class Field extends Canvas{
 	public enum equipes {UNE, DEUX};
 	private Vector<Player> equipe1 = new Vector<Player>();
 	private Vector<Player> equipe2 = new Vector<Player>();
-	
+
 	// Projectiles
 	private Vector<Projectile> projectiles = new Vector<Projectile>();
 	// Enregistrement et écriture des scores
@@ -79,12 +81,14 @@ public class Field extends Canvas{
 		gc = this.getGraphicsContext2D();
 		
 		// On initialise le terrain de jeu
-		equipe1.add(new Player(gc, Player.typeJoueur.BLUE,     w/4-24,   h-140, Player.orientation.BAS,     width, 0.5));
-		equipe1.add(new Bot   (gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, Bot.strategie.OPPOSE_AU_TIR, 0.5));
-		equipe1.add(new Bot   (gc, Player.typeJoueur.SKELETON, 3*w/4-36, h-140, Player.orientation.BAS,     width, Bot.strategie.OPPOSE_AU_TIR, 0.5));
-		equipe2.add(new Player(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1));
-		equipe2.add(new Bot   (gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, Bot.strategie.OPPOSE_AU_TIR, 1));
-		equipe2.add(new Bot   (gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, Bot.strategie.OPPOSE_AU_TIR, 1));
+		PlayerInterface fact = new PlayerFactory();
+
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.BLUE,     w/4-24,   h-140, Player.orientation.BAS, null,    width, 0.5));
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS, Bot.strategie.OPPOSE_AU_TIR,     width, 0.5));
+		equipe1.add(fact.creerPlayer(gc, Player.typeJoueur.SKELETON, 3*w/4-36, h-140, Player.orientation.BAS,   Bot.strategie.OPPOSE_AU_TIR,   width,  0.5));
+		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, null,width, 1));
+		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, Bot.strategie.OPPOSE_AU_TIR, width, 1));
+		equipe2.add(fact.creerPlayer(gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, Bot.strategie.OPPOSE_AU_TIR, width, 1));
 
 		spriteDExplosion = new spriteExplosion();
 
@@ -159,10 +163,12 @@ public class Field extends Canvas{
 	public void addProjectile(Player joueur){
 		switch(joueur.getOrientation()){
 			case HAUT:
-				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+10, joueur.getAngle()+90, height-140, Player.orientation.HAUT, 80, width-80));
+				projectiles.add(new Projectile());
+				projectiles.lastElement().getInstance(gc, joueur.getX()+10, joueur.getY()+10, joueur.getAngle()+90, height-140, Player.orientation.HAUT, 80, width-80);
 				break;
 			case BAS:
-				projectiles.add(new Projectile(gc, joueur.getX()+10, joueur.getY()+20, joueur.getAngle()-90, 20, Player.orientation.BAS, 80, width-80));
+				projectiles.add(new Projectile());
+				projectiles.lastElement().getInstance(gc, joueur.getX()+10, joueur.getY()+20, joueur.getAngle()-90, 20, Player.orientation.BAS, 80, width-80);
 				break;
 		}
 	}

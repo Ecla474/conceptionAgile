@@ -68,7 +68,7 @@ public class Player extends Rectangle{
 		y = yInit;
 		graphicsContext = gc;
 		typeDeJoueur=type;
-		largeur = 10; // A ADAPTER !!!!
+		largeur = 10;
 		hauteur = 10;
 		strategieEnCours = Player.strategie.CONTROLLEE;
 	    

@@ -1,8 +1,7 @@
 package fr.icom.info.m1.balleauprisonnier_mvn.Projectile;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 
 import javafx.scene.image.Image;
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
-import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player.orientation;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Projectile{
@@ -40,32 +39,35 @@ public class Projectile{
 	 */
 	public void finalize(){}
 
+	private static Projectile instance = null;
+
 	/**
-	 * Constructeur du Projectile
-	 * @param gcParent contexte graphique
-	 * @param xInitial abscisse initiale
-	 * @param yInitial ordonnée initiale
-	 * @param directionInitiale direction initiale (en degré)
-	 * @param fondDuTerrain profondeur du terrain
-	 * @param orientationTir camps qui a lancé le Projectile
-	 * @param coteGauche Bord gauche du terrain
-	 * @param coteDroit Bord droit du terrain
-	 */
-	public Projectile(GraphicsContext gcParent, double xInitial, double yInitial, double directionInitiale, double fondDuTerrain, Player.orientation orientationTir, int coteGauche, int coteDroit){
+	* @param gcParent contexte graphique
+	* @param xInitial abscisse initiale
+	* @param yInitial ordonnée initiale
+	* @param directionInitiale direction initiale (en degré)
+	* @param fondDuTerrain profondeur du terrain
+	* @param orientationTir camps qui a lancé le Projectile
+	* @param coteGauche Bord gauche du terrain
+	* @param coteDroit Bord droit du terrain
+	*/
+	public Projectile getInstance(GraphicsContext gcParent, double xInitial, double yInitial, double directionInitiale, double fondDuTerrain, Player.orientation orientationTir, int coteGauche, int coteDroit){
 		gc = gcParent;
 		vitesse = 1;
 		representation = new Image("assets/ball.png");
 		x = xInitial;
 		y = yInitial;
 		direction = directionInitiale;
-		System.out.println("##" + direction);
 
 		profondeurTerrain = fondDuTerrain;
 		orientation = orientationTir;
 
 		bordGauche = coteGauche;
 		bordDroit = coteDroit;
+
+		return instance;
 	}
+
 
 	/**
 	 * @return la nécessité d'être supprimé du terrain.
