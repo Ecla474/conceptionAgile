@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerFactory;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerInterface;
 import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -32,10 +34,12 @@ public class Field extends Canvas{
 
 	// Tableau traçant les evenements
 	private ArrayList<String> input = new ArrayList<String>();
+
+
 	
 	public final GraphicsContext gc;
-	private final int width;
-	private final int height;
+	public final int width;
+	public final int height;
 	
 	/**
 	 * Canvas dans lequel on va dessiner le jeu.
@@ -52,12 +56,15 @@ public class Field extends Canvas{
 		this.setFocusTraversable(true);
 		gc = this.getGraphicsContext2D();
 		// On initialise le terrain de jeu
-		equipe1[0] = new Player(gc, Player.typeJoueur.BLUE,     w/4-26,   h-140, Player.orientation.BAS,     width, 0.5);
-		equipe1[1] = new Bot(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
-		equipe1[2] = new Bot(gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
-		equipe2[0] = new Player(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1);
-		equipe2[1] = new Bot(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);
-		equipe2[2] = new Bot(gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, 1);
+
+		PlayerInterface fact = new PlayerFactory();
+
+		equipe1[0] = fact.creerPlayer(gc, Player.typeJoueur.BLUE,w/4-26,h-140,Player.orientation.BAS,width, 0.5);
+		equipe1[1] = fact.creerPlayer(gc, Player.typeJoueur.SKELETON, w/2-32,   h-140, Player.orientation.BAS,     width, 0.5);
+		equipe1[2] = fact.creerPlayer(gc, Player.typeJoueur.SKELETON, 3*w/4-35, h-140, Player.orientation.BAS,     width, 0.5);
+		equipe2[0] = fact.creerPlayer(gc, Player.typeJoueur.RED,      w/4-26,   20, Player.orientation.HAUT, width, 1);
+		equipe2[1] = fact.creerPlayer(gc, Player.typeJoueur.ORC,      w/2-32,   20, Player.orientation.HAUT, width, 1);
+		equipe2[2] = fact.creerPlayer(gc, Player.typeJoueur.ORC,      3*w/4-35, 20, Player.orientation.HAUT, width, 1);
 
 		// 𝘌𝘷𝘦𝘯𝘵 𝘓𝘪𝘴𝘵𝘦𝘯𝘦𝘳 du clavier : quand une touche est pressée, on la rajoute a la liste d'input.
 		this.setOnKeyPressed(

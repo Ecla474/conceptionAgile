@@ -3,7 +3,7 @@ import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 
-public class Bot extends Player {
+public class Bot extends Player{
     /**
      * Constructeur du joueur bot
      * @param gc Contexte graphique
@@ -30,6 +30,10 @@ public class Bot extends Player {
     /*public Bot(GraphicsContext gc, typeJoueur color, int xInit, int yInit, Player.orientation orientationInitiale, int largeurPlateau){
         super(gc, color, xInit, yInit, orientationInitiale, largeurPlateau);
     }*/
+
+    public void draw(){
+
+    }
 
     /**
      * Gére les modifications du modèle à partir des infos de la vue.

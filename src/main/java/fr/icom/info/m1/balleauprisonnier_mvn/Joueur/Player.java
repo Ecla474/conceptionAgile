@@ -2,6 +2,7 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Joueur;
 
 import fr.icom.info.m1.balleauprisonnier_mvn.Field.Field;
 import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.Sprite;
+import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.PlayerInterface;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
