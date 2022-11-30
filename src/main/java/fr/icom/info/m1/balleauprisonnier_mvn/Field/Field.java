@@ -3,6 +3,7 @@ package fr.icom.info.m1.balleauprisonnier_mvn.Field;
 import java.util.ArrayList;
 import java.util.Vector;
 
+
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Bot;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Player;
 import fr.icom.info.m1.balleauprisonnier_mvn.Joueur.Rectangle;
@@ -10,8 +11,11 @@ import fr.icom.info.m1.balleauprisonnier_mvn.Projectile.Projectile;
 import fr.icom.info.m1.balleauprisonnier_mvn.Sprite.spriteExplosion;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Text;
 import javafx.scene.input.KeyEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -26,6 +30,12 @@ public class Field extends Canvas{
 	private Vector<Player> equipe1 = new Vector<Player>();
 	private Vector<Player> equipe2 = new Vector<Player>();
 	private Group root;
+
+	// Enregistrement et écriture des scores
+	private int score1;
+	private int score2;
+	private Text text;
+
 
 	public spriteExplosion spriteDExplosion;
 
@@ -51,14 +61,15 @@ public class Field extends Canvas{
 	 * @param h Hauteur du canvas
 	 */
 	public Field(Scene scene, int w, int h, Group root){
+		// Initialisation graphique
 		super(w, h); 
 		width = w;
 		height = h;
 		this.root = root;
 
-		presenceExplosion = false;
-		xExplosion = 0;
-		yExplosion = 0;
+		// Score
+		score1 = 0;
+		score2 = 0;
 		
 		// Permet de capturer le focus et donc les événements clavier et souris.
 		this.setFocusTraversable(true);
@@ -109,6 +120,12 @@ public class Field extends Canvas{
 			root.getChildren().add(getJoueurs()[i].sprite);
 		}
 		root.getChildren().add(spriteDExplosion);
+
+		// Affichage du texte
+		text = new Text();  
+		root.getChildren().add(text);
+		 
+
 	}
 
 	private void controleur(){
@@ -151,11 +168,6 @@ public class Field extends Canvas{
 					break;
 			}
 		}
-		/*for(int i=0; i<equipe2.size(); i++){
-			if(equipe2.get(i).controleur(input, Field.equipes.DEUX)){
-				addProjectile(equipe2.get(i));
-			}
-		}*/
 
 		// Gestion des projectiles
 		presenceExplosion = false;
@@ -173,6 +185,7 @@ public class Field extends Canvas{
 			// Tests collisions
 			for(int j=0; j<equipe1.size(); j++){
 				if(CollisionBalleJoueur(projectiles.get(i), equipe1.get(j))){
+					score1+=100;
 					presenceExplosion = true;
 					xExplosion = equipe1.get(j).getX()-32;
 					yExplosion = equipe1.get(j).getY()-32;
@@ -184,6 +197,7 @@ public class Field extends Canvas{
 			}
 			for(int j=0; j<equipe2.size(); j++){
 				if(CollisionBalleJoueur(projectiles.get(i), equipe2.get(j))){
+					score2+=100;
 					presenceExplosion = true;
 					xExplosion = equipe2.get(j).getX()-32;
 					yExplosion = equipe2.get(j).getY()-32;
@@ -196,6 +210,7 @@ public class Field extends Canvas{
 		}
 
 		vueTerrain(presenceExplosion, xExplosion, yExplosion);
+		vueScore();
 	}
 
 	private void vueTerrain(boolean presenceExplosion, double x, double y){
@@ -221,6 +236,25 @@ public class Field extends Canvas{
 			spriteDExplosion.setY(y);
 			spriteDExplosion.playShoot();
 		}
+	}
+
+	private void vueScore(){
+		gc.setFill(Color.WHITE);
+		gc.setFont(new Font("", 60));
+		int testScore = score1;
+		int nbrChiffre = 0;
+		while(testScore>0){
+			testScore/=10;
+			nbrChiffre++;
+		}
+		gc.fillText(Integer.toString(score1), width/2-15*nbrChiffre, (height/2)-45);
+		testScore = score2;
+		nbrChiffre = 0;
+		while(testScore>0){
+			testScore/=10;
+			nbrChiffre++;
+		}
+		gc.fillText(Integer.toString(score2), width/2-15*nbrChiffre, (height/2)+65);
 	}
 
 	private boolean CollisionPointCercle(double x, double y,Projectile C){
